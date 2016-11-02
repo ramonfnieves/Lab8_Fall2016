@@ -2,7 +2,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 
-public class ContactMeGuiPartial extends JFrame
+public class ContactMeGui extends JFrame
 {
 	/**
 	 * 
@@ -11,8 +11,8 @@ public class ContactMeGuiPartial extends JFrame
 	private static final int WIDTH = 400;
 	private static final int HEIGHT = 300;
 
-	private JLabel emailL, passwordL,reEnterPassL, messageL;
-	private JTextField emailTF, messageTF;
+	private JLabel nameL,emailL, passwordL,reEnterPassL, messageL;
+	private JTextField nameTF, emailTF, messageTF;
 	private JTextField passwordTF,reEnterPassTF;
 	private JButton sendB, exitB, clearB;
 
@@ -24,16 +24,21 @@ public class ContactMeGuiPartial extends JFrame
 	private JMenuItem byEmail;
 	private JMenuItem byFax;
 
-	public ContactMeGuiPartial()
+	public ContactMeGui()
 	{
+
+		nameL = new JLabel("Name: ", SwingConstants.CENTER);
+
 		emailL = new JLabel("Email: ", SwingConstants.CENTER);
 		passwordL = new JLabel("Password: ", SwingConstants.CENTER);
 		reEnterPassL= new JLabel("Re-enter Password: ", SwingConstants.CENTER);
 		messageL = new JLabel("Addtional Info: ", SwingConstants.CENTER);
 
+		nameTF = new JTextField();
+
 		emailTF = new JTextField();
-		passwordTF = new JTextField();
-		reEnterPassTF = new JTextField();
+		passwordTF = new JPasswordField();
+		reEnterPassTF = new JPasswordField();
 		messageTF = new JTextField();
 
 		//SPecify handlers for each button and add (register) ActionListeners to each button.
@@ -58,9 +63,11 @@ public class ContactMeGuiPartial extends JFrame
 
 		setTitle("Registration Form");
 		Container pane = getContentPane();
-		pane.setLayout(new GridLayout(6, 3));
+		pane.setLayout(new GridLayout(7, 3));
 
 		//Add things to the pane in the order you want them to appear (left to right, top to bottom)
+		pane.add(nameL);
+		pane.add(nameTF);		
 		pane.add(emailL);
 		pane.add(emailTF);
 		pane.add(passwordL);
@@ -86,13 +93,14 @@ public class ContactMeGuiPartial extends JFrame
 		public void actionPerformed(ActionEvent e)
 		{
 			//We use the getText & setText methods to manipulate the data entered into those fields.
+			String inputName= nameTF.getText();
 			String inputEmail= emailTF.getText();
 			String inputPassword= passwordTF.getText();
 			String reinputPassword= reEnterPassTF.getText();
 			String inputMessage= messageTF.getText();
 
 
-			if(inputEmail.equals("") || inputPassword.equals("") || reinputPassword.equals("")){
+			if(inputName.equals("") || inputEmail.equals("") || inputPassword.equals("") || reinputPassword.equals("")){
 
 				//Display error message
 				JOptionPane.showMessageDialog(null,
@@ -100,7 +108,14 @@ public class ContactMeGuiPartial extends JFrame
 						"Something is missing!!!",
 						JOptionPane.WARNING_MESSAGE);
 			}
-
+			else if(!inputEmail.contains("@")){
+				JOptionPane.showMessageDialog(null,"Email address is wrong. Missing '@'",
+						"Wrong Password Input!!!", JOptionPane.WARNING_MESSAGE);
+			}
+			else if(!isSame(inputPassword, reinputPassword)){
+				JOptionPane.showMessageDialog(null,"Password not same",
+						"Wrong Password Input!!!", JOptionPane.WARNING_MESSAGE);
+			}						
 			//the password is too long
 			else if(inputPassword.length() > 11){
 				JOptionPane.showMessageDialog(null,"Wrong password. Rememeber it is 10 characters long",
@@ -133,6 +148,17 @@ public class ContactMeGuiPartial extends JFrame
 
 	public static void main(String[] args)
 	{
-		ContactMeGuiPartial contactMe = new ContactMeGuiPartial();
+		ContactMeGui contactMe = new ContactMeGui();
+	}
+
+	public boolean isSame(String p1, String p2){
+		if((p1.length()==p2.length())){
+			for (int i = 0; i < p1.length(); i++) {
+				return String.valueOf(p1.charAt(i)).equals(String.valueOf(p2.charAt(i))); 
+			}
+		}
+		else {
+			return false;
+		}
 	}
 }
